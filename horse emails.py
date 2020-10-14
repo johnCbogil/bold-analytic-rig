@@ -18,11 +18,6 @@ warnings.filterwarnings('ignore')
 
 email_list = []       #Initialize empty list to store scraped emails
 
-
-# In[159]:
-
-
-
 # In[225]:
 
 def get_table():
@@ -54,14 +49,12 @@ def horse_emails(table_input):
     ### PRETTY SURE THIS IS GUCCI ###
     
     
-    # filtered_df = x[x['event_name'] == 'email_submitted']  #Filters input dataframe to rows in which email actions were taken
     # TODO: FIND WAY TO COUNT DYNAMICALLY
-    loop_len = 190 ##range(0, x['event_name'].count())   #Obtains length of dataframe used for loop iterations
+    loop_len = 190 #Obtains length of dataframe used for loop iterations
     dict_values = list(table_input['event_params'].values) #Obtains values from nested dicts which contain emails
     email_regex = r'[A-z0-9.]+@+[a-z]+[.]+[a-z]+[a-z]'   #Regex pattern to match emails
     global email_list
 
-    # for _ in range(190):
     list_normalized = str(dict_values).replace("'","")  #Replace quotes around emails, just makes it easier
     reggy = re.findall(email_regex, list_normalized) #Match to email
     if reggy:                                 
@@ -71,12 +64,10 @@ def horse_emails(table_input):
 
     return email_list
 
-# In[227]:
-
 #Make a copy of the df so you dont have to pull everything from gcp back into memory and waste time type
-df2 = get_table()
+table = get_table()
 
-list_of_emails = horse_emails(df2)
+list_of_emails = horse_emails(table)
 
 print(list_of_emails)
 
