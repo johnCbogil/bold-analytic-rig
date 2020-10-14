@@ -18,37 +18,32 @@ warnings.filterwarnings('ignore')
 
 email_list = []       #Initialize empty list to store scraped emails
 
-#Sling credentials to big queery
-credentials = service_account.Credentials.from_service_account_file(
-    'key.json')
-
-project_id = 'thankful-68f22'
-
-client = bigquery.Client(credentials= credentials,project=project_id)
-
-#Pull everything from the app's table
-query_job = client.query("""
-SELECT * FROM `thankful-68f22.analytics_198686154.events_*` WHERE event_name = 'email_submitted' ORDER BY event_timestamp DESC
- """)
-results = query_job.result()
-
-
-# In[5]:
-
-
-#Pull table into pandas
-df = results.to_dataframe()
-
 
 # In[159]:
 
 
-#Make a copy of the df so you dont have to pull everything from gcp back into memory and waste time type
-df2 = df
-
 
 # In[225]:
 
+def get_table():
+    #Sling credentials to big queery
+    credentials = service_account.Credentials.from_service_account_file(
+        'key.json')
+
+    project_id = 'thankful-68f22'
+
+    client = bigquery.Client(credentials= credentials,project=project_id)
+
+    #Pull everything from the app's table
+    query_job = client.query("""
+    SELECT * FROM `thankful-68f22.analytics_198686154.events_*` WHERE event_name = 'email_submitted' ORDER BY event_timestamp DESC
+     """)
+
+    results = query_job.result()
+
+    #Pull table into pandas
+    df = results.to_dataframe()
+    return df
 
 def horse_emails(table_input):
     
@@ -78,6 +73,8 @@ def horse_emails(table_input):
 
 # In[227]:
 
+#Make a copy of the df so you dont have to pull everything from gcp back into memory and waste time type
+df2 = get_table()
 
 list_of_emails = horse_emails(df2)
 
