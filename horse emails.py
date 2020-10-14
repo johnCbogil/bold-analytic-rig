@@ -50,7 +50,7 @@ df2 = df
 # In[225]:
 
 
-def email_horser(x):
+def horse_emails(table_input):
     
     ### THIS FUNCTION WILL HORSE EMAILS OUT OF YOUR TABLE ###
     ### CREATED BY JOSEPH VORBECK 10/13/1994 - MY BDAY ###
@@ -60,25 +60,26 @@ def email_horser(x):
     
     
     # filtered_df = x[x['event_name'] == 'email_submitted']  #Filters input dataframe to rows in which email actions were taken
+    # TODO: FIND WAY TO COUNT DYNAMICALLY
     loop_len = 190 ##range(0, x['event_name'].count())   #Obtains length of dataframe used for loop iterations
-    dict_values = list(x['event_params'].values) #Obtains values from nested dicts which contain emails
+    dict_values = list(table_input['event_params'].values) #Obtains values from nested dicts which contain emails
     email_regex = r'[A-z0-9.]+@+[a-z]+[.]+[a-z]+[a-z]'   #Regex pattern to match emails
     global email_list
 
-    for _ in range(190):
-        list_normalized = str(dict_values).replace("'","")  #Replace quotes around emails, just makes it easier
-        reggy = re.findall(email_regex, list_normalized) #Match to email
-        if reggy:                                 
-            email_list += reggy                   #If there is a match put the email in the list
-        else:                                     #If not drop a message
-            print("No email associated")
-    
+    # for _ in range(190):
+    list_normalized = str(dict_values).replace("'","")  #Replace quotes around emails, just makes it easier
+    reggy = re.findall(email_regex, list_normalized) #Match to email
+    if reggy:                                 
+        email_list += reggy                   #If there is a match put the email in the list
+    else:                                     #If not drop a message
+        print("No email associated")
+
     return email_list
 
 # In[227]:
 
 
-list_of_emails = email_horser(df2)
+list_of_emails = horse_emails(df2)
 
-print (list_of_emails)
+print(list_of_emails)
 
