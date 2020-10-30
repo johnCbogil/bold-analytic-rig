@@ -25,7 +25,7 @@ def get_ids():
     SELECT DISTINCT user_pseudo_id
     FROM `thankful-68f22.analytics_198686154.events_*`
     WHERE event_name = 'user_started_trial'
-    AND event_date BETWEEN '20201007' AND '20201013' 
+    AND event_date BETWEEN '20201014' AND '20201022' 
     """
     )
 
@@ -33,6 +33,7 @@ def get_ids():
     results = query_job.result()
     df = results.to_dataframe()
     print("finished getting IDs")
+    print(df.count())
     return df
 
 
@@ -55,10 +56,22 @@ def ripEventsForID(id):
     #Convert object to df
     results = query_job.result()
     df = results.to_dataframe()
-    print("writing to csv")
-    file_name = "events+%s.csv" %(id)
-    df.to_csv(file_name)
 
+    completed_trial_count = df['event_name'].str.contains('user_completed_trial').sum()
+    if completed_trial_count > 0:
+        print("writing to trial completed")
+        file_name = "completed/trial_completed+%s.json" %(id)
+        result = df.to_json(orient="records")
+        parsed = json.loads(result)
+        with open(file_name, 'w') as outfile:
+            json.dump(parsed, outfile, indent=4)
+    else:
+        print("writing to trial NOT completed")
+        file_name = "not_completed/trial_not_completed+%s.json" %(id)
+        result = df.to_json(orient="records")
+        parsed = json.loads(result)
+        with open(file_name, 'w') as outfile:
+            json.dump(parsed, outfile, indent=4)
 
 idFrame = get_ids()
 ids = idFrame["user_pseudo_id"].values.tolist()
