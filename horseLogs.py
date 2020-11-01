@@ -25,7 +25,7 @@ def get_ids():
     SELECT DISTINCT user_pseudo_id
     FROM `thankful-68f22.analytics_198686154.events_*`
     WHERE event_name = 'user_started_trial'
-    AND event_date BETWEEN '20201014' AND '20201022' 
+    AND event_date BETWEEN '20201018' AND '20201025' 
     """
     )
 
@@ -33,7 +33,7 @@ def get_ids():
     results = query_job.result()
     df = results.to_dataframe()
     print("finished getting IDs")
-    print(df.count())
+    print(df.shape[0])
     return df
 
 
@@ -49,7 +49,8 @@ def ripEventsForID(id):
     SELECT *
     FROM `thankful-68f22.analytics_198686154.events_*`
     WHERE user_pseudo_id = '{}'
-    ORDER BY event_timestamp DESC
+    AND event_date BETWEEN '20201018' AND '20201025' 
+    ORDER BY event_timestamp ASC
     """.format(id)
     )
 
