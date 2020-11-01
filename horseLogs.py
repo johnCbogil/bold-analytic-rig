@@ -12,6 +12,9 @@ import datetime
 import re
 warnings.filterwarnings('ignore')
 
+start_date = 20201018
+end_date = 20201025
+
 def get_ids():
     print("getting IDs")
 
@@ -25,8 +28,8 @@ def get_ids():
     SELECT DISTINCT user_pseudo_id
     FROM `thankful-68f22.analytics_198686154.events_*`
     WHERE event_name = 'user_started_trial'
-    AND event_date BETWEEN '20201018' AND '20201025' 
-    """
+    AND event_date BETWEEN '{}' AND '{}' 
+    """.format(start_date, end_date)
     )
 
     #Convert object to df
@@ -49,9 +52,9 @@ def ripEventsForID(id):
     SELECT *
     FROM `thankful-68f22.analytics_198686154.events_*`
     WHERE user_pseudo_id = '{}'
-    AND event_date BETWEEN '20201018' AND '20201025' 
+    AND event_date BETWEEN '{}' AND '{}' 
     ORDER BY event_timestamp ASC
-    """.format(id)
+    """.format(id, start_date, end_date)
     )
 
     #Convert object to df
