@@ -19,8 +19,7 @@ def get_ids():
     print("getting IDs")
 
     #Sling credentials to big queery
-    credentials = service_account.Credentials.from_service_account_file(
-        'key.json')
+    credentials = service_account.Credentials.from_service_account_file('key.json')
 
     client = bigquery.Client(credentials= credentials, project='thankful-68f22')
     query_job = client.query(
@@ -39,12 +38,29 @@ def get_ids():
     print(df.shape[0])
     return df
 
+def fetchStartDate(id):
+	print("fetching start date")
+	credentials = service_account.Credentials.from_service_account_file('key.json')
+	client = bigquery.Client(credentials= credentials, project='thankful-68f22')
+	query_job = client.query(
+    """
+    SELECT event_date
+    FROM `thankful-68f22.analytics_198686154.events_*`
+    WHERE event_name = 'user_started_trial'
+    AND user_pseudo_id ='{}'
+    """.format(id)
+    )
+	results = query_job.result()
+	df = results.to_dataframe()
+
+	date = df['event_date'].values[0]
+
+	print(date)
 
 def ripEventsForID(id):
     print("ripping id")
 
-    credentials = service_account.Credentials.from_service_account_file(
-        'key.json')
+    credentials = service_account.Credentials.from_service_account_file('key.json')
 
     client = bigquery.Client(credentials= credentials, project='thankful-68f22')
     query_job = client.query(
@@ -80,4 +96,4 @@ idFrame = get_ids()
 ids = idFrame["user_pseudo_id"].values.tolist()
 
 for id in ids:
-    ripEventsForID(id)
+    fetchStartDate(id)
