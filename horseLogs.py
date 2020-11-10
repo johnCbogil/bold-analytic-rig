@@ -7,7 +7,7 @@ from google.cloud import bigquery
 from google.oauth2 import service_account
 import json
 import warnings
-from datetime import datetime
+from datetime import timedelta, datetime
 import datetime
 import re
 warnings.filterwarnings('ignore')
@@ -52,10 +52,17 @@ def fetchStartDate(id):
     )
 	results = query_job.result()
 	df = results.to_dataframe()
+	date_time_str = df['event_date'].values[0]
 
-	date = df['event_date'].values[0]
+	# convert to date object
+	date_object = datetime.datetime.strptime(date_time_str, '%Y%m%d')
 
-	print(date)
+	# add 7 days
+	end = date_object + timedelta(days=7)
+
+	# convert back to string
+	end_string = end.strftime('%Y%m%d')
+	print(end_string)
 
 def ripEventsForID(id):
     print("ripping id")
